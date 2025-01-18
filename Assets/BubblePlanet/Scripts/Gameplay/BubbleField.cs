@@ -21,10 +21,10 @@ namespace Gameplay
   #endif
 		}
 		
-		// void Update()
-		// {
-		// 	radius += Time.deltaTime * 0.1f; // Test
-		// }
+		void Update()
+		{
+			radius += Time.deltaTime * 0.1f; // Test
+		}
 
 		public void IncreaseRadius(float amount)
 		{
