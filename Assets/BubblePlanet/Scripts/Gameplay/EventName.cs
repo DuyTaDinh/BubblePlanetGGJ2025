@@ -4,6 +4,8 @@ namespace Gameplay
 	{
 		public static string ChangeBubbleStep = "ChangeBubbleStep";
 		public static string ChangeScore = "ChangeScore";
+		public static string GameOver = "GameOver";
+		public static string ChangeAutoClick = "ChangeAutoClick";
 
 	}
 }

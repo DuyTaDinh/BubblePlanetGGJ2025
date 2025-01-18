@@ -36,5 +36,13 @@ namespace Gameplay
 				Destroy(gameObject);
 			}
 		}
+		
+		void OnTriggerEnter2D(Collider2D other)
+		{
+			if (other.CompareTag(TagName.Meteor))
+			{
+				Destroy(gameObject);
+			}
+		}
 	}
 }

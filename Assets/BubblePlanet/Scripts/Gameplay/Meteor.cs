@@ -118,14 +118,16 @@ namespace Gameplay
 					}
 					if (other.CompareTag(TagName.Planet))
 					{
-						DataManager.Instance.DecreaseScore(50);
+						int currentBubbleLevel = DataManager.Instance.GetCurrentLevel();
+						DataManager.Instance.DecreaseScore(10 * currentBubbleLevel);
 						Destroy(gameObject);
 					}
 					break;
 				case EntityState.Bubble:
 					if (other.CompareTag(TagName.Planet))
 					{
-						DataManager.Instance.AddScore(25);
+						int currentBubbleLevel = DataManager.Instance.GetCurrentLevel();
+						DataManager.Instance.AddScore(currentBubbleLevel * 5);
 						Destroy(gameObject);
 					}
 					break;

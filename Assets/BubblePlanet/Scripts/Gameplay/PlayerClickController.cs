@@ -6,12 +6,9 @@ namespace Gameplay
 	{
 		[SerializeField] private CircleCollider2D clickCollider;
 		[SerializeField] private BubbleField bubbleField;
-		
-		public void ClickBubblePlanet()
-		{
-			DataManager.Instance.AddScore(1);
-		}
-		
+
+		float _lastClickTime = 0f;
+
 		private void Update()
 		{
 			if(DataManager.Instance.IsGameEnded()) return;
@@ -19,14 +16,29 @@ namespace Gameplay
 			if(Input.GetMouseButtonDown(1))
 			{
 				FireBubbleProjectile();
-			}else if (Input.GetMouseButtonDown(0))
+			}else if (DataManager.Instance.IsAutoClickEnabled())
 			{
-				Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				if (clickCollider.OverlapPoint(clickPosition))
-				{
-					ClickBubblePlanet(); 
-				}
+				AutoClick();
 			}
+			else if (Input.GetMouseButtonDown(0))
+			{
+				AddScore();
+			}
+		}
+		void AutoClick()
+		{
+			if(Time.time - _lastClickTime > DataManager.Instance.ClickIntervalAuto)
+			{
+				AddScore();
+				_lastClickTime = Time.time;
+			}
+		}
+		
+		void AddScore()
+		{
+			int value = DataManager.Instance.GetScorePerClick();
+			int additional = DataManager.Instance.GetAdditionalScorePerClick();
+			DataManager.Instance.AddScore(value + additional);
 		}
 		void FireBubbleProjectile()
 		{

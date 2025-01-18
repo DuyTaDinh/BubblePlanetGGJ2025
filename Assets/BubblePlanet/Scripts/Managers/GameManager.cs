@@ -1,19 +1,26 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Gameplay;
+using PrimeTween;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Utilities;
 namespace Managers
 {
 	public class GameManager : Singleton<GameManager>
 	{
 		[Header("Game Over UI")]
-		[SerializeField] private GameObject gameOverUI;
-		[SerializeField] private GameObject gameWinUI;
+		[SerializeField] private TextMeshProUGUI resultText;
+		[SerializeField] private List<GameObject> disableWhenGameOver;
+		[SerializeField] private List<GameObject> enableWhenGameOver;
+		[SerializeField] private List<GameObject> enableWhenGameWin;
 
-		private const float LoseThreshold = 0.25f;
-		private const float WinThreshold = 5f;
+		[Header("Button Auto Click")]
+		[SerializeField] private Outline autoClickOutline;
+		[SerializeField] private TextMeshProUGUI autoClickText;
 
 		private Dictionary<string, Action<int>> eventListeners;
 
@@ -26,10 +33,22 @@ namespace Managers
 		{
 			eventListeners = new Dictionary<string, Action<int>>
 			{
-				{ EventName.ChangeScore, OnChangeScore }
+				{
+					EventName.ChangeScore, OnChangeScore
+				},
+				{
+					EventName.ChangeAutoClick, OnChangeAutoClick
+				},
+				{
+					EventName.GameOver, OnChangeScore
+				}
 			};
 		}
-		
+
+		void Start()
+		{
+			OnChangeAutoClick(DataManager.Instance.IsAutoClickEnabled() ? 1 : 0);
+		}
 		private void OnEnable()
 		{
 			RegisterEventListeners();
@@ -55,58 +74,99 @@ namespace Managers
 				EventManager.StopListening(listener.Key, listener.Value);
 			}
 		}
-		
+
 		void OnChangeScore(int scoreChange)
 		{
-			if (!DataManager.Instance.IsGameEnded()) 
+			if (!DataManager.Instance.IsGameEnded())
 			{
 				HandleGameState();
 			}
 		}
-		
+
+		void OnChangeAutoClick(int autoClickChange)
+		{
+			autoClickText.color = autoClickChange > 0 ? Color.green : Color.gray;
+			autoClickOutline.effectColor = autoClickChange > 0 ? Color.white : Color.gray;
+		}
+
+
 		private void HandleGameState()
 		{
 			int currentScore = DataManager.Instance.GetScore();
 			if (currentScore <= 0)
 			{
-				GameOver();
+				StartCoroutine(GameOver());
 			}
 			else if (currentScore >= 1000)
 			{
-				GameWin();
+				StartCoroutine(GameWin());
 			}
-
-			// float bubbleRadius = DataManager.Instance.BubbleField.Radius;
-			//
-			// if (bubbleRadius < LoseThreshold)
-			// {
-			// 	GameOver();
-			// }
-			// else if (bubbleRadius > WinThreshold)
-			// {
-			// 	GameWin();
-			// }
 		}
 
-		private void GameOver()
+		void Update()
+		{
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.V))
+			{
+				StartCoroutine(GameWin());
+			}
+			if (Input.GetKeyDown(KeyCode.B))
+			{
+				StartCoroutine(GameOver());
+			}
+#endif
+		}
+		IEnumerator GameOver()
 		{
 			DataManager.Instance.SetGameEnded();
-			Time.timeScale = 0f;
-			gameOverUI.SetActive(true);
+			yield return new WaitForSecondsRealtime(0.5f);
+			int finalScore = DataManager.Instance.GetMaxScore();
+			string gameOverText = $"<size=90>GAME OVER</size>\n \n<size=30>FINAL SCORE</size>\n<size=60>{finalScore}</size>\n";
+			resultText.text = gameOverText;
+			Tween.Scale(resultText.transform, 0, 1, 0.3f, Easing.Bounce(1));
+			foreach (var obj in disableWhenGameOver)
+			{
+				obj.SetActive(false);
+			}
+			foreach (var obj in enableWhenGameOver)
+			{
+				obj.SetActive(true);
+			}
 		}
 
-		private void GameWin()
+		IEnumerator GameWin()
 		{
 			DataManager.Instance.SetGameEnded();
-			Time.timeScale = 0f;
-			gameWinUI.SetActive(true);
+			yield return new WaitForSecondsRealtime(0.5f);
+			int finalScore = DataManager.Instance.GetMaxScore();
+			string gameOverText = $"<size=90>YOU WIN!</size>\n \n<size=30>FINAL SCORE</size>\n<size=60>{finalScore}</size>\n";
+			resultText.text = gameOverText;
+			Tween.Scale(resultText.transform, 0, 1, 0.3f, Easing.Bounce(1));
+
+			foreach (var obj in disableWhenGameOver)
+			{
+				obj.SetActive(false);
+			}
+			foreach (var obj in enableWhenGameWin)
+			{
+				obj.SetActive(true);
+			}
 		}
 
+#region Button Actions
 		public void Retry()
 		{
-			Time.timeScale = 1f;
+			// Time.timeScale = 1f;
 			Scene scene = SceneManager.GetActiveScene();
 			SceneManager.LoadScene(scene.buildIndex);
 		}
+		
+		public void ChangeAutoClick()
+		{
+			DataManager.Instance.ChangeAutoClick();
+		}
+
+#endregion
+		
 	}
 }

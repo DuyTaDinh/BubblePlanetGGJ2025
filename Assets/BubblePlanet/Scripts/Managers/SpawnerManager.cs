@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using Gameplay;
 using UnityEngine;
 using Utilities;
+using Random = UnityEngine.Random;
 namespace Managers
 {
 	public class SpawnerManager: Singleton<SpawnerManager>
     {
         [SerializeField] private GameObject meteorPrefab;
-        [SerializeField] private float spawnMeteorInterval = 1f;
+        [SerializeField] private float spawnMeteorInterval = 5f;
+        [SerializeField][Range(0.1f, 0.3f)] private float spawnIntervalRange = 0.3f;
 
         [SerializeField] private GameObject bubbleProjectilePrefab;
         
@@ -35,7 +37,7 @@ namespace Managers
         {
             eventListeners = new Dictionary<string, Action<int>>
             {
-                { "DifficultyIncrease", IncreaseSpawnFrequency }
+                { EventName.ChangeBubbleStep, OnChangeBubbleStep }
             };
         }
 
@@ -55,9 +57,9 @@ namespace Managers
             }
         }
 
-        private void IncreaseSpawnFrequency(int value)
+        private void OnChangeBubbleStep(int newStep)
         {
-            spawnMeteorInterval = Mathf.Max(0.1f, spawnMeteorInterval - 0.1f);
+            spawnMeteorInterval = Mathf.Max(0.5f,  5 - (newStep - 1) * 0.5f);
         }
 
         private IEnumerator SpawnMeteors()
@@ -69,7 +71,8 @@ namespace Managers
                     yield break;
                 }
                 SpawnMeteor();
-                yield return new WaitForSecondsRealtime(spawnMeteorInterval);
+                yield return new WaitForSecondsRealtime(
+                    Random.Range(spawnMeteorInterval - spawnIntervalRange, spawnMeteorInterval + spawnIntervalRange));
             }
         }
 
