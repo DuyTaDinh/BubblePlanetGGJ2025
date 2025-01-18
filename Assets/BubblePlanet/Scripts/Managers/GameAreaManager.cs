@@ -1,30 +1,28 @@
 using System;
 using System.Collections.Generic;
-using Managers;
+using Gameplay;
 using UnityEngine;
-namespace Gameplay
+using Utilities;
+namespace Managers
 {
-	public class BubbleField : MonoBehaviour
+	public class GameAreaManager : Singleton<GameAreaManager>
 	{
-		[SerializeField] private float radius = 0.33f;
-		// [Header("Warning Indicator")]
-		// [SerializeField] private SpriteRenderer warningSprite;
-		// [SerializeField, Range(0.5f, 1)] private float warningStartRadiusScale = 0.8f;
-		// [SerializeField] private Gradient warningGradient;
-		// [SerializeField] private float warningAlphaScale;
+		public Transform area;
+		public BoxCollider2D spawnerMeteorBounds; 
+		public BoxCollider2D deathZoneBounds;
 
 		private Dictionary<string, Action<int>> eventListeners;
 
-		private void Awake()
+		protected override void Awake()
 		{
+			base.Awake();
 			InitializeEventListeners();
 		}
-		
 		private void InitializeEventListeners()
 		{
 			eventListeners = new Dictionary<string, Action<int>>
 			{
-				{ EventName.ChangeScore, OnChangeScore }
+				{ EventName.ChangeBubbleStep, OnChangeBubbleStep }
 			};
 		}
 		
@@ -54,15 +52,13 @@ namespace Gameplay
 			}
 		}
 		
-		void OnChangeScore(int scoreChange)
+		void OnChangeBubbleStep(int step)
 		{
-			radius += scoreChange * 0.01f;
-			transform.localScale = Vector3.one * radius * 2f;
+			Vector3 scale = area.localScale;
+			scale.x = step;
+			scale.y = step;
+			area.localScale = scale * 1.2f;
 		}
 		
-		public float GetRadius()
-		{
-			return radius;
-		}
 	}
 }

@@ -7,7 +7,6 @@ namespace Gameplay
 	public class CameraController : Singleton<CameraController>
 	{
 		[Header("Camera Setting")]
-		[SerializeField] private int currentStep = 1;
 		[SerializeField] private float sizePerStep = 8f;
 		[SerializeField] private float zoomSpeed = 5f;
 		
@@ -34,10 +33,14 @@ namespace Gameplay
 
 		private void CalculateTargetSize()
 		{
-			float bubbleFieldRadius = DataManager.Instance.BubbleField.Radius;
+			float bubbleFieldRadius = DataManager.Instance.BubbleField.GetRadius();
 			// float maxBubbleFieldRadius = currentStep * BubbleSizeThreshold;
-			currentStep = Mathf.CeilToInt(bubbleFieldRadius / BubbleSizeThreshold);
-			_targetSize = currentStep * sizePerStep;
+			int newStep = Mathf.CeilToInt(bubbleFieldRadius / BubbleSizeThreshold);
+			if(newStep != DataManager.Instance.GetCurrentLevel())
+			{
+				DataManager.Instance.UpdateCurrentLevel(newStep);
+			}
+			_targetSize = newStep * sizePerStep;
 		}
 	}
 }
