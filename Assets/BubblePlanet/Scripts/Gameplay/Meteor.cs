@@ -11,7 +11,9 @@ namespace Gameplay
 		[SerializeField] private float directionVariationMin = 0.3f;
 		[SerializeField] private float directionVariationMax = 0.5f;
 		[SerializeField] private GameObject bubbleVisual;
-
+		
+		[SerializeField] private ParticleSystem meteorExplosion;
+		
 		// private Animator animator;
 		// private Faction faction;
 		private Vector3 direction;
@@ -106,7 +108,10 @@ namespace Gameplay
 		{
 			if (other.CompareTag(TagName.Meteor))
 			{
+				// ParticleSystem bullet = Instantiate(meteorExplosion, gameObject.transform.position, transform.rotation);
+				// bullet.Play();
 				Destroy(gameObject);
+
 			}
 			
 			switch (entityState)

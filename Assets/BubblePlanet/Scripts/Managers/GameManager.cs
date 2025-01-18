@@ -40,7 +40,7 @@ namespace Managers
 					EventName.ChangeAutoClick, OnChangeAutoClick
 				},
 				{
-					EventName.GameOver, OnChangeScore
+					EventName.GameOver, OnGameOver
 				}
 			};
 		}
@@ -82,11 +82,17 @@ namespace Managers
 				HandleGameState();
 			}
 		}
+		
+		void OnGameOver(int state)
+		{
+			StartCoroutine(GameOver());
+		}
 
 		void OnChangeAutoClick(int autoClickChange)
 		{
-			autoClickText.color = autoClickChange > 0 ? Color.green : Color.gray;
-			autoClickOutline.effectColor = autoClickChange > 0 ? Color.white : Color.gray;
+			Color effectColor = autoClickChange > 0 ? Color.green : Color.gray;
+			autoClickText.color = effectColor;
+			autoClickOutline.effectColor = effectColor;
 		}
 
 

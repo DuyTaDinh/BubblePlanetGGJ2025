@@ -49,7 +49,12 @@ namespace Managers
             DataManager.Instance.DecreaseScore(cost);
             DataManager.Instance.IncreaseAdditionalScorePerClick(value);
             currentLevelPerClick++;
+            AudioManager.Instance.PlaySound(SoundName.ShopConfirm);
             UpdateUI();
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(SoundName.ButtonSelect);
         }
     }
 

@@ -4,11 +4,11 @@ namespace Gameplay
 {
 	public class PlayerClickController : MonoBehaviour
 	{
-		[SerializeField] private CircleCollider2D clickCollider;
+		[SerializeField] private BoxCollider2D clickCollider;
 		[SerializeField] private BubbleField bubbleField;
 
 		float _lastClickTime = 0f;
-
+		
 		private void Update()
 		{
 			if(DataManager.Instance.IsGameEnded()) return;
@@ -22,7 +22,12 @@ namespace Gameplay
 			}
 			else if (Input.GetMouseButtonDown(0))
 			{
-				AddScore();
+				Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				if (clickCollider.OverlapPoint(clickPosition))
+				{
+					AddScore();
+				}
+				
 			}
 		}
 		void AutoClick()
@@ -45,9 +50,10 @@ namespace Gameplay
 			if(DataManager.Instance.GetScore() <= 5) return;
 			DataManager.Instance.DecreaseScore(5);
 			Vector2 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Vector2 center = clickCollider.bounds.center;
+			Vector2 center = transform.position;
 			Vector2 direction = clickPosition - center;
 			SpawnerManager.Instance.SpawnBubbleProjectile(center, direction);
+			AudioManager.Instance.PlaySound(SoundName.FireBubble);
 		}
 
 	}

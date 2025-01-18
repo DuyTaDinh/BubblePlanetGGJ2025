@@ -10,12 +10,12 @@ namespace Gameplay
 		[SerializeField] float maxInstability = 100f;
 		[SerializeField] float currentInstability = 0f;
 
-		[Header("Warning Indicator")]
 		[SerializeField] SpriteRenderer warningSprite;
+		
+		[SerializeField] float radius = 0.33f;
 
 		private bool isStable = true;
 		private Dictionary<string, Action<int>> eventListeners;
-		private float radius = 0.33f;
 		private float timeFromLastChange = 0f;
 
 		private void Awake()
@@ -134,9 +134,7 @@ namespace Gameplay
 		private void PopBubble()
 		{
 			isStable = false;
-			Debug.Log("Bubble popped! Game Over!");
-			// Handle bubble pop logic here
-			// Destroy(gameObject); // Destroy the bubble
+			EventManager.TriggerEvent(EventName.GameOver, 2);
 		}
 	}
 
