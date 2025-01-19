@@ -44,6 +44,7 @@ namespace Gameplay
 			int value = DataManager.Instance.GetScorePerClick();
 			int additional = DataManager.Instance.GetAdditionalScorePerClick();
 			DataManager.Instance.AddScore(value + additional);
+			AudioManager.Instance.PlaySound(SoundName.InCreaseBubble);
 		}
 		void FireBubbleProjectile()
 		{

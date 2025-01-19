@@ -17,7 +17,7 @@ namespace Gameplay
 		private bool isStable = true;
 		private Dictionary<string, Action<int>> eventListeners;
 		private float timeFromLastChange = 0f;
-
+		private bool isNotified = false;
 		private void Awake()
 		{
 			InitializeEventListeners();
@@ -123,6 +123,10 @@ namespace Gameplay
 			if (currentInstability > maxInstability)
 			{
 				PopBubble();
+			}else if (currentInstability > maxInstability * 0.8f && !isNotified)
+			{
+				isNotified = true;
+				GameManager.Instance.DontBeOverhead();
 			}
 		}
 
