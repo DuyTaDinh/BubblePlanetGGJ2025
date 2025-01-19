@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 375882673492345108}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalPosition: {x: -0.006, y: -0.006, z: 0}
+  m_LocalScale: {x: 0.12, y: 0.12, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8783924029925444899}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 578e5e6e51da2794bba4fd287c74d9cf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ef1bf2ecc16140f4195ed991ac4136c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -212,8 +212,8 @@ MonoBehaviour:
   maxSpeed: 5
   directionVariationMin: 0.3
   directionVariationMax: 0.5
-  entityState: 0
   bubbleVisual: {fileID: 4232457579157209660}
+  meteorExplosion: {fileID: 0}
 --- !u!1 &4232457579157209660
 GameObject:
   m_ObjectHideFlags: 0

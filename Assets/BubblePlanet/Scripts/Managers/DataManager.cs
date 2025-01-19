@@ -102,9 +102,9 @@ namespace Managers
 			additionalScorePerClick += amount;
 		}
 
-		public int GetMaxScore()
+		public string GetHighestScoreText()
 		{
-			return highestScore;
+			return $"{highestScore/100f}%";
 		}
 		
 		public void ChangeAutoClick()

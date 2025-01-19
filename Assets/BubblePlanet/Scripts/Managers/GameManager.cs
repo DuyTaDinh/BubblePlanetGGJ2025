@@ -125,9 +125,8 @@ namespace Managers
 		IEnumerator GameOver()
 		{
 			DataManager.Instance.SetGameEnded();
-			yield return new WaitForSecondsRealtime(0.5f);
-			int finalScore = DataManager.Instance.GetMaxScore();
-			string gameOverText = $"<size=90>GAME OVER</size>\n \n<size=30>FINAL SCORE</size>\n<size=60>{finalScore}</size>\n";
+			yield return new WaitForSecondsRealtime(0.5f);;
+			string gameOverText = $"<size=90>GAME OVER</size>\n \n<size=30>HIGHEST PROGRESS</size>\n<size=60>{DataManager.Instance.GetHighestScoreText()}</size>\n";
 			resultText.text = gameOverText;
 			Tween.Scale(resultText.transform, 0, 1, 0.3f, Easing.Bounce(1));
 			foreach (var obj in disableWhenGameOver)
@@ -144,8 +143,7 @@ namespace Managers
 		{
 			DataManager.Instance.SetGameEnded();
 			yield return new WaitForSecondsRealtime(0.5f);
-			int finalScore = DataManager.Instance.GetMaxScore();
-			string gameOverText = $"<size=90>YOU WIN!</size>\n \n<size=30>FINAL SCORE</size>\n<size=60>{finalScore}</size>\n";
+			string gameOverText = $"<size=90>YOU WIN!</size>\n \n<size=30> </size>\n<size=60> </size>\n";
 			resultText.text = gameOverText;
 			Tween.Scale(resultText.transform, 0, 1, 0.3f, Easing.Bounce(1));
 
