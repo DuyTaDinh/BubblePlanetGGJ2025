@@ -11,8 +11,9 @@ namespace Gameplay
 		[SerializeField] private float directionVariationMin = 0.3f;
 		[SerializeField] private float directionVariationMax = 0.5f;
 		[SerializeField] private GameObject bubbleVisual;
-		
+		[SerializeField] private GameObject trailParticle;
 		[SerializeField] private ParticleSystem meteorExplosion;
+		[SerializeField] private ParticleSystem meteorHitPlanetExplosion;
 		
 		// private Animator animator;
 		// private Faction faction;
@@ -106,29 +107,33 @@ namespace Gameplay
 		}
 		void OnTriggerEnter2D(Collider2D other)
 		{
-			if (other.CompareTag(TagName.Meteor))
-			{
-				// ParticleSystem bullet = Instantiate(meteorExplosion, gameObject.transform.position, transform.rotation);
-				// bullet.Play();
-				Destroy(gameObject);
-
-			}
-			
 			switch (entityState)
 			{
 				case EntityState.Normal:
+					if (other.CompareTag(TagName.Meteor))
+					{
+						ParticleSystem bullet = Instantiate(meteorExplosion, gameObject.transform.position, transform.rotation);
+						bullet.Play();
+						Destroy(gameObject);
+					}
 					if (other.CompareTag(TagName.BubbleProjectile))
 					{
 						ChangeToBubble();
 					}
 					if (other.CompareTag(TagName.Planet))
 					{
+						ParticleSystem bullet = Instantiate(meteorHitPlanetExplosion, gameObject.transform.position, transform.rotation);
+						bullet.Play();
 						int currentBubbleLevel = DataManager.Instance.GetCurrentLevel();
 						DataManager.Instance.DecreaseScore(10 * currentBubbleLevel);
 						Destroy(gameObject);
 					}
 					break;
 				case EntityState.Bubble:
+					if (other.CompareTag(TagName.Meteor))
+					{
+						Destroy(gameObject);
+					}
 					if (other.CompareTag(TagName.Planet))
 					{
 						int currentBubbleLevel = DataManager.Instance.GetCurrentLevel();
@@ -143,6 +148,7 @@ namespace Gameplay
 			entityState = EntityState.Bubble;
 			gameObject.tag = TagName.Bubble;
 			bubbleVisual.SetActive(true);
+			trailParticle.SetActive(false);
 		}
 
 	}

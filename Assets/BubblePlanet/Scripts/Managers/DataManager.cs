@@ -104,7 +104,7 @@ namespace Managers
 
 		public string GetHighestScoreText()
 		{
-			return $"{highestScore/100f}%";
+			return $"{highestScore/10f}%";
 		}
 		
 		public void ChangeAutoClick()

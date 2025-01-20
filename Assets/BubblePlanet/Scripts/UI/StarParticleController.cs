@@ -5,9 +5,10 @@ using Managers;
 using UnityEngine;
 namespace UI
 {
-	public class StartParticleController : MonoBehaviour
+	public class StarParticleController : MonoBehaviour
 	{
 		[SerializeField] private List<GameObject> startParticles = new List<GameObject>();
+		[SerializeField] GameObject shootingStar;
 		
 		private Dictionary<string, Action<int>> eventListeners;
 		void Awake()
@@ -62,6 +63,7 @@ namespace UI
 			{
 				startParticles[i].SetActive(i >= step - 5 && i < step + 1);
 			}
+			shootingStar.transform.localScale = new Vector3(0.57f + 1f * (step - 1), 0.57f + 1f * (step - 1), 1);
 		}
 
 	}

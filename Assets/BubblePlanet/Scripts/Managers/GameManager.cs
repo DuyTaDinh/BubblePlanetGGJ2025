@@ -23,6 +23,10 @@ namespace Managers
 		[SerializeField] private Outline autoClickOutline;
 		[SerializeField] private TextMeshProUGUI autoClickText;
 
+		[SerializeField] private ParticleSystem planetExplosion;
+		[SerializeField] private GameObject planet;
+		[SerializeField] private GameObject planetBubbleField;
+		
 		private Dictionary<string, Action<int>> eventListeners;
 
 		protected override void Awake()
@@ -151,6 +155,12 @@ namespace Managers
 		}
 		IEnumerator GameOver()
 		{
+			planet.SetActive(false);
+			planetBubbleField.SetActive(false);
+			ParticleSystem bullet = Instantiate(planetExplosion, planet.transform.position, transform.rotation);
+			bullet.Play();
+			AudioManager.Instance.PlaySound(SoundName.PlanetExplosion);
+			yield return new WaitForSecondsRealtime(0.5f);
 			DataManager.Instance.SetGameEnded();
 			yield return new WaitForSecondsRealtime(0.5f);
 			Tween.StopAll(resultText.transform);

@@ -86,7 +86,7 @@ namespace Gameplay
 			}
 			else
 			{
-				radiusResult += 0.37f + (currentScore - 100) * 0.0007f;
+				radiusResult += 0.37f + (currentScore - 100) * 0.007f;
 			}
 			return radiusResult;
 		}

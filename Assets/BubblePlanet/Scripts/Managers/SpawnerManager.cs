@@ -10,17 +10,20 @@ namespace Managers
 	public class SpawnerManager: Singleton<SpawnerManager>
     {
         [SerializeField] private GameObject meteorPrefab;
-        [SerializeField] private float spawnMeteorInterval = 5f;
         [SerializeField][Range(0.1f, 0.3f)] private float spawnIntervalRange = 0.3f;
-
         [SerializeField] private GameObject bubbleProjectilePrefab;
         
+        float spawnMeteorInterval = 2f;
         private Dictionary<string, Action<int>> eventListeners;
         private void Awake()
         {
             InitializeEventListeners();
         }
 
+        void Start()
+        {
+            OnChangeBubbleStep(DataManager.Instance.GetCurrentLevel());
+        }
         private void OnEnable()
         {
             RegisterEventListeners();
@@ -59,7 +62,19 @@ namespace Managers
 
         private void OnChangeBubbleStep(int newStep)
         {
-            spawnMeteorInterval = Mathf.Max(0.5f,  5 - (newStep - 1) * 0.5f);
+            if (newStep < 3)
+            {
+                spawnMeteorInterval = 2f;
+            }else if (newStep < 5)
+            {
+                spawnMeteorInterval = 1.5f;
+            } else if (newStep < 7)
+            {
+                spawnMeteorInterval = 1.1f;
+            } else 
+            {
+                spawnMeteorInterval = 0.8f;
+            }
         }
 
         private IEnumerator SpawnMeteors()
@@ -79,6 +94,9 @@ namespace Managers
         private void SpawnMeteor()
         {
             var meteorObject = Instantiate(meteorPrefab, transform);
+            Transform meteorTransform = meteorObject.transform;
+            int currentLevel = DataManager.Instance.GetCurrentLevel();
+            meteorTransform.localScale = Vector3.one * (1f + 0.3f * (currentLevel - 1));
             var meteor = meteorObject.GetComponent<Meteor>();
 #if UNITY_EDITOR
             if (meteor == null)
